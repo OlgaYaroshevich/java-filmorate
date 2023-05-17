@@ -50,6 +50,7 @@ class UserControllerTest {
         user.setEmail(null);
         assertEquals(1, validator.validate(user).size());
     }
+
     @Test
     public void blankEmailTest() {
         user.setEmail(" ");
