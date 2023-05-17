@@ -97,4 +97,5 @@ class FilmControllerTest {
     public void negativeIdTest() {
         film.setId(-1);
         assertEquals(1, validator.validate(film).size());
-    }}
+    }
+}
