@@ -22,7 +22,7 @@ class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        user = User.builder().id(1).email("mail@email.ru").login("login")
+        user = User.builder().email("mail@email.ru").login("login")
                 .birthday(LocalDate.parse("08-04-1989", DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .name("Olga").build();
         userController = new UserController();
@@ -42,33 +42,33 @@ class UserControllerTest {
     @Test
     public void emailError() {
         user.setEmail("mail.ru");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test
     public void nullEmailTest() {
         user.setEmail(null);
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test
     public void blankEmailTest() {
         user.setEmail(" ");
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(3, validator.validate(user).size());
     }
 
     @Test
     public void nullLoginTest() {
         user.setLogin(null);
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test
     public void blankLoginTest() {
         user.setLogin("");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
         user.setLogin(" ");
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test
@@ -88,7 +88,7 @@ class UserControllerTest {
     @Test
     public void birthdayInFutureTest() {
         user.setBirthday(LocalDate.parse("08-04-2030", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(1, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test

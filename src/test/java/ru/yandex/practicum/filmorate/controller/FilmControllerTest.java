@@ -23,13 +23,9 @@ class FilmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        film = Film.builder()
-                .id(1)
-                .name("Film_1")
-                .description("Description_Film_1")
+        film = Film.builder().name("Film_1").description("Description_Film_1")
                 .releaseDate(LocalDate.parse("08-04-1989", DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-                .duration(Duration.ofMinutes(120))
-                .build();
+                .duration(Duration.ofMinutes(120)).build();
         filmController = new FilmController();
     }
 
@@ -42,15 +38,15 @@ class FilmControllerTest {
     @Test
     public void blankNameTest() {
         film.setName(null);
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
     }
 
     @Test
     public void nullNameTest() {
         film.setName("");
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
         film.setName(" ");
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
     }
 
     @Test
@@ -62,7 +58,7 @@ class FilmControllerTest {
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription");
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
     }
 
     @Test
@@ -74,13 +70,13 @@ class FilmControllerTest {
     @Test
     public void releaseDateInFutureTest() {
         film.setReleaseDate(LocalDate.parse("28-12-2030", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
     }
 
     @Test
     public void negativeDurationTest() {
         film.setDuration(Duration.ofSeconds(-120));
-        assertEquals(1, validator.validate(film).size());
+        assertEquals(2, validator.validate(film).size());
     }
 
     @Test
