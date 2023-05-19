@@ -24,6 +24,7 @@ class FilmControllerTest {
     @BeforeEach
     public void setUp() {
         film = Film.builder()
+                .id(1)
                 .name("Film_1")
                 .description("Description_Film_1")
                 .releaseDate(LocalDate.parse("08-04-1989", DateTimeFormatter.ofPattern("dd-MM-yyyy")))

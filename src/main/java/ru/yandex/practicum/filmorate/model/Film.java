@@ -7,7 +7,7 @@ import org.hibernate.validator.constraints.time.DurationMin;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Positive;
 import java.time.Duration;
 import java.time.LocalDate;
 
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 public class Film {
 
-    @PositiveOrZero
+    @Positive
     private int id;
     @NotBlank
     private String name;
@@ -25,4 +25,5 @@ public class Film {
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
     private Duration duration;
+
 }

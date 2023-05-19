@@ -22,7 +22,7 @@ class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        user = User.builder().email("mail@email.ru").login("login")
+        user = User.builder().id(1).email("mail@email.ru").login("login")
                 .birthday(LocalDate.parse("08-04-1989", DateTimeFormatter.ofPattern("dd-MM-yyyy")))
                 .name("Olga").build();
         userController = new UserController();

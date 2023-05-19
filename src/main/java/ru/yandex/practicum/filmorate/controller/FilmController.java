@@ -16,18 +16,18 @@ import java.util.*;
 public class FilmController {
 
     private final Map<Integer, Film> filmsMap = new HashMap<>();
-    private int id = 1;
+    private int nextId = 1;
 
-    @PostMapping()
+    @PostMapping
     public Film addNewFilm(@Valid @RequestBody Film film) {
         checkReleaseDate(film);
-        film.setId(id++);
+        film.setId(nextId++);
         filmsMap.put(film.getId(), film);
         log.debug("Добавлен новый фильм: " + film);
         return film;
     }
 
-    @PutMapping()
+    @PutMapping
     public Film updateFilm(@Valid @RequestBody Film film) {
         checkReleaseDate(film);
         if (!filmsMap.containsKey(film.getId())) {
@@ -39,10 +39,10 @@ public class FilmController {
         return film;
     }
 
-    @GetMapping()
-    public Collection<Film> getFilms() {
+    @GetMapping
+    public List<Film> getFilms() {
         log.debug("Получение списка фильмов");
-        return filmsMap.values();
+        return new ArrayList<>(filmsMap.values());
     }
 
     private void checkReleaseDate(Film film) {

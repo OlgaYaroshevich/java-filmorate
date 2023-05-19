@@ -14,20 +14,20 @@ import java.util.*;
 public class UserController {
 
     private final Map<Integer, User> usersMap = new HashMap<>();
-    private int id = 1;
+    private int nextId = 1;
 
-    @PostMapping()
+    @PostMapping
     public User addNewUser(@Valid @RequestBody User user) {
         if (user.getName() == null) {
             user.setName(user.getLogin());
         }
-        user.setId(id++);
+        user.setId(nextId++);
         usersMap.put(user.getId(), user);
         log.debug("Добавлен новый пользователь: " + user);
         return user;
     }
 
-    @PutMapping()
+    @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         if (usersMap.get(user.getId()) == null) {
             log.error("Обновление несуществующего пользователя");
@@ -41,9 +41,9 @@ public class UserController {
         return user;
     }
 
-    @GetMapping()
-    public Collection<User> getUsers() {
+    @GetMapping
+    public List<User> getUsers() {
         log.debug("Получение пользователей");
-        return usersMap.values();
+        return new ArrayList<>(usersMap.values());
     }
 }
