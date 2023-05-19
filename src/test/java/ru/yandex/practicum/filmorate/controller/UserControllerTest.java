@@ -42,33 +42,33 @@ class UserControllerTest {
     @Test
     public void emailError() {
         user.setEmail("mail.ru");
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
     }
 
     @Test
     public void nullEmailTest() {
         user.setEmail(null);
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
     }
 
     @Test
     public void blankEmailTest() {
         user.setEmail(" ");
-        assertEquals(3, validator.validate(user).size());
+        assertEquals(2, validator.validate(user).size());
     }
 
     @Test
     public void nullLoginTest() {
         user.setLogin(null);
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
     }
 
     @Test
     public void blankLoginTest() {
         user.setLogin("");
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
         user.setLogin(" ");
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
     }
 
     @Test
@@ -88,18 +88,12 @@ class UserControllerTest {
     @Test
     public void birthdayInFutureTest() {
         user.setBirthday(LocalDate.parse("08-04-2030", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(2, validator.validate(user).size());
+        assertEquals(1, validator.validate(user).size());
     }
 
     @Test
     public void nullRequestTest() {
         User user = null;
         assertThrows(NullPointerException.class, () -> userController.addNewUser(user));
-    }
-
-    @Test
-    public void negativeIdTest() {
-        user.setId(-1);
-        assertEquals(1, validator.validate(user).size());
     }
 }

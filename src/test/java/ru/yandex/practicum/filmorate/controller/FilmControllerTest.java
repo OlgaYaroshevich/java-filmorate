@@ -38,15 +38,15 @@ class FilmControllerTest {
     @Test
     public void blankNameTest() {
         film.setName(null);
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
     }
 
     @Test
     public void nullNameTest() {
         film.setName("");
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
         film.setName(" ");
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
     }
 
     @Test
@@ -58,7 +58,7 @@ class FilmControllerTest {
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription");
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
     }
 
     @Test
@@ -70,13 +70,13 @@ class FilmControllerTest {
     @Test
     public void releaseDateInFutureTest() {
         film.setReleaseDate(LocalDate.parse("28-12-2030", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
     }
 
     @Test
     public void negativeDurationTest() {
         film.setDuration(Duration.ofSeconds(-120));
-        assertEquals(2, validator.validate(film).size());
+        assertEquals(1, validator.validate(film).size());
     }
 
     @Test
@@ -88,11 +88,5 @@ class FilmControllerTest {
     @Test
     public void idMissedTest() {
         assertThrows(ValidationException.class, () -> filmController.updateFilm(film));
-    }
-
-    @Test
-    public void negativeIdTest() {
-        film.setId(-1);
-        assertEquals(1, validator.validate(film).size());
     }
 }
