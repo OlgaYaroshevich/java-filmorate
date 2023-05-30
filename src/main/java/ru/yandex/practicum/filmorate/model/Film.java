@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Builder;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.time.DurationMin;
@@ -9,12 +8,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
-@Builder
 public class Film {
 
-    private int id;
+    private Long id;
     @NotBlank
     private String name;
     @Length(max = 200)
@@ -23,5 +23,18 @@ public class Film {
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
     private Duration duration;
+    Set<Long> popularFilms = new HashSet<>();
+
+    public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.releaseDate = releaseDate;
+        this.duration = duration;
+    }
+
+    public void setPopularFilms(Long userId) {
+        this.popularFilms.add(userId);
+    }
 
 }

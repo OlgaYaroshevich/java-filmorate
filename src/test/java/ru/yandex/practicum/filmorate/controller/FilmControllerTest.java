@@ -4,89 +4,138 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FilmControllerTest {
 
-    private FilmController filmController;
-    private Film film;
+    FilmController filmController;
+    FilmService filmService;
+    FilmStorage filmStorage;
+    UserStorage userStorage;
+    Film defaultFilm;
+    Film beforeLocalDateFilm;
+    Film unnamedFilm;
+    Film overDescription;
+    Film negativeDuration;
+    Film updateFilm;
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    public void setUp() {
-        film = Film.builder().name("Film_1").description("Description_Film_1")
-                .releaseDate(LocalDate.parse("08-04-1989", DateTimeFormatter.ofPattern("dd-MM-yyyy")))
-                .duration(Duration.ofMinutes(120)).build();
-        filmController = new FilmController();
-    }
+    void beforeEach() {
+        filmStorage = new InMemoryFilmStorage();
+        userStorage = new InMemoryUserStorage();
+        filmService = new FilmService(filmStorage, userStorage);
+        filmController = new FilmController(filmService);
 
-    @Test
-    public void filmDefaultTest() {
-        filmController.addNewFilm(film);
-        assertEquals(1, filmController.getFilms().size());
-    }
+        defaultFilm = new Film(
+                1L,
+                "Film",
+                "Default Film",
+                LocalDate.of(1989, 12, 20),
+                Duration.ofMinutes(120)
+        );
 
-    @Test
-    public void blankNameTest() {
-        film.setName(null);
-        assertEquals(1, validator.validate(film).size());
-    }
+        beforeLocalDateFilm = new Film(
+                2L,
+                "Before Local Date Film",
+                "before Local Date Film ",
+                LocalDate.of(1895, 12, 24),
+                Duration.ofMinutes(60)
+        );
 
-    @Test
-    public void nullNameTest() {
-        film.setName("");
-        assertEquals(1, validator.validate(film).size());
-        film.setName(" ");
-        assertEquals(1, validator.validate(film).size());
-    }
+        unnamedFilm = new Film(
+                3L,
+                "",
+                "Unnamed Film",
+                LocalDate.of(1989, 12, 20),
+                Duration.ofMinutes(120)
+        );
 
-    @Test
-    public void moreThanTwoHundredCharactersDescriptionTest() {
-        film.setDescription("DescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
+        overDescription = new Film(
+                4L,
+                "Over Description Film",
                 "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription");
-        assertEquals(1, validator.validate(film).size());
+                        "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
+                        "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription",
+                LocalDate.of(1989, 12, 20),
+                Duration.ofMinutes(120)
+        );
+
+        negativeDuration = new Film(
+                5L,
+                "Negative Duration Film",
+                "Negative Duration Film",
+                LocalDate.of(1989, 12, 20),
+                Duration.ofMinutes(-120)
+        );
+
+        updateFilm = new Film(
+                1L,
+                "newFilm",
+                "New interesting Film",
+                LocalDate.of(1989, 10, 10),
+                Duration.ofMinutes(30)
+        );
     }
 
     @Test
-    public void releaseDateBefore28121895Test() {
-        film.setReleaseDate(LocalDate.parse("28-12-1894", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertThrows(ValidationException.class, () -> filmController.updateFilm(film));
+    void addFilm() throws ValidationException {
+        int size = filmController.getFilms().size();
+        assertEquals(0, size, "Not null size");
+        filmController.addNewFilm(defaultFilm);
+        int size1 = filmController.getFilms().size();
+        assertEquals(1, size1, "Отличается размер мапы");
+        assertEquals(1, validator.validate(unnamedFilm).size());
+        assertEquals(1, validator.validate(overDescription).size());
+        assertEquals(1, validator.validate(negativeDuration).size());
+        assertEquals(1, validator.validate(unnamedFilm).size());
+        final ValidationException exception = assertThrows(
+                ValidationException.class,
+                () -> filmController.addNewFilm(beforeLocalDateFilm));
+        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
+                exception.getMessage());
+   }
+
+    @Test
+    void updateFilm() throws ValidationException {
+        int size = filmController.getFilms().size();
+        assertEquals(0, size, "Not null size");
+        filmController.addNewFilm(defaultFilm);
+        int size1 = filmController.getFilms().size();
+        assertEquals(1, size1, "Отличается размер мапы");
+        assertEquals(1, validator.validate(unnamedFilm).size());
+        assertEquals(1, validator.validate(overDescription).size());
+        assertEquals(1, validator.validate(negativeDuration).size());
+        assertEquals(1, validator.validate(unnamedFilm).size());
+        final ValidationException exception = assertThrows(
+                ValidationException.class,
+                () -> filmController.addNewFilm(beforeLocalDateFilm));
+        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
+                exception.getMessage());
+        filmController.updateFilm(updateFilm);
+        Film example = filmController.getFilms().get(0);
+        assertEquals(updateFilm, example, "Разные фильмы");
     }
 
     @Test
-    public void releaseDateInFutureTest() {
-        film.setReleaseDate(LocalDate.parse("28-12-2030", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        assertEquals(1, validator.validate(film).size());
-    }
-
-    @Test
-    public void negativeDurationTest() {
-        film.setDuration(Duration.ofSeconds(-120));
-        assertEquals(1, validator.validate(film).size());
-    }
-
-    @Test
-    public void nullRequestTest() {
-        Film film = null;
-        assertThrows(NullPointerException.class, () -> filmController.addNewFilm(film));
-    }
-
-    @Test
-    public void idMissedTest() {
-        assertThrows(ValidationException.class, () -> filmController.updateFilm(film));
+    void getAllFilms() throws ValidationException {
+        int size = filmController.getFilms().size();
+        assertEquals(0, size, "Not null size");
+        filmController.addNewFilm(defaultFilm);
+        int size1 = filmController.getFilms().size();
+        assertEquals(1, size1, "Отличается размер мапы");
     }
 }
