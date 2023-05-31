@@ -56,7 +56,7 @@ public class InMemoryUserStorage implements UserStorage {
         return new ArrayList<>(usersMap.values());
     }
 
-    public Collection<User> getUsersByIds(Collection<Long> ids) {
+    public List<User> getUsersByIds(Collection<Long> ids) {
         List<User> result = new ArrayList<>();
         for (long userID : ids) {
             if (!usersMap.containsKey(userID)) {
@@ -67,7 +67,7 @@ public class InMemoryUserStorage implements UserStorage {
         return result;
     }
 
-    public void delUser(long id) {
+    public void deleteUser(long id) {
         log.debug("Удаление пользователя {}", id);
         usersMap.remove(id);
     }

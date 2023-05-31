@@ -41,27 +41,27 @@ public class FilmService {
     public Film addLike(long idFilm, long idUser) throws ValidationException {
         User user = userStorage.getUser(idUser);
         Film film = filmStorage.getFilm(idFilm);
-        film.setPopularFilms(user.getId());
+        film.setLikes(user.getId());
         return film;
     }
 
-    public void delLike(long idFilm, long idUser) throws ValidationException {
+    public void deleteLike(long idFilm, long idUser) throws ValidationException {
         User user = userStorage.getUser(idUser);
         Film film = filmStorage.getFilm(idFilm);
-        film.getPopularFilms().remove(user.getId());
+        film.getLikes().remove(user.getId());
     }
 
-    public Collection<Film> getPopularFilms(int count) {
-        Comparator<Film> comparator = Comparator.comparingInt(f -> f.getPopularFilms().size());
+    public List<Film> getPopularFilms(int count) {
+        Comparator<Film> comparator = Comparator.comparingInt(f -> f.getLikes().size());
         return filmStorage
                 .getFilms()
                 .stream()
                 .sorted(comparator.reversed())
                 .limit(count)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
-    public void delFilm(long id) {
-        filmStorage.delFilm(id);
+    public void deleteFilm(long id) {
+        filmStorage.deleteFilm(id);
     }
 }

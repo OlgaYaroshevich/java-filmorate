@@ -48,19 +48,19 @@ public class UserService {
         friend.setFriendsId(user.getId());
     }
 
-    public void delFriend(long userId, long friendId) throws ValidationException {
+    public void deleteFriend(long userId, long friendId) throws ValidationException {
         User user = userStorage.getUser(userId);
         User friend = userStorage.getUser(friendId);
         user.getFriendsId().remove(friend.getId());
         friend.getFriendsId().remove(user.getId());
     }
 
-    public Collection<User> getUserFriends(long id) throws ValidationException {
+    public List<User> getUserFriends(long id) throws ValidationException {
         User userFriends = userStorage.getUser(id);
         return userStorage.getUsersByIds(userFriends.getFriendsId());
     }
 
-    public Collection<User> getCommonFriends(long userId, long otherId) throws ValidationException {
+    public List<User> getCommonFriends(long userId, long otherId) throws ValidationException {
         User user1 = userStorage.getUser(userId);
         User user2 = userStorage.getUser(otherId);
         Set<Long> commonFriendIds = findCommonElements(user1.getFriendsId(), user2.getFriendsId());
@@ -71,7 +71,7 @@ public class UserService {
         return first.stream().filter(second::contains).collect(Collectors.toSet());
     }
 
-    public void delUser(long id) {
-        userStorage.delUser(id);
+    public void deleteUser(long id) {
+        userStorage.deleteUser(id);
     }
 }

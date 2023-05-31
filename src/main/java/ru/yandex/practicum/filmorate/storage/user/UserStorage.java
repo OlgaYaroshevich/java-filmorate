@@ -12,12 +12,11 @@ public interface UserStorage {
 
     User updateUser(User user) throws ValidationException;
 
-
     User getUser(long id) throws ValidationException;
 
     List<User> getUsers();
 
-    Collection<User> getUsersByIds(Collection<Long> ids) throws ValidationException;
+    List<User> getUsersByIds(Collection<Long> ids) throws ValidationException;
 
-    void delUser(long id);
+    void deleteUser(long id);
 }

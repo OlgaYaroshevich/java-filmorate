@@ -14,7 +14,7 @@ import java.util.*;
 @Slf4j
 public class UserController {
 
-    UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable("id") long id) throws ValidationException {
+    public User geleteUser(@PathVariable("id") long id) throws ValidationException {
         return userService.getUser(id);
     }
 
@@ -49,24 +49,24 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void delFriend(@PathVariable("id") long userId,
-                          @PathVariable("friendId") long friendId) throws ValidationException {
-        userService.delFriend(userId, friendId);
+    public void deleteFriend(@PathVariable("id") long userId,
+                             @PathVariable("friendId") long friendId) throws ValidationException {
+        userService.deleteFriend(userId, friendId);
         log.debug("Друг удален.");
     }
 
     @GetMapping("/users/{id}/friends")
-    public Collection<User> getUserFriends(@PathVariable("id") long id) throws ValidationException {
+    public List<User> getUserFriends(@PathVariable("id") long id) throws ValidationException {
         return userService.getUserFriends(id);
     }
 
     @GetMapping("/users/{id}/friends/common/{otherId}")
-    public Collection<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) throws ValidationException {
+    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) throws ValidationException {
         return userService.getCommonFriends(userId, otherId);
     }
 
     @DeleteMapping("/users/{id}/delete")
-    public void delUser(@PathVariable("id") long id) {
-        userService.delUser(id);
+    public void deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
     }
 }

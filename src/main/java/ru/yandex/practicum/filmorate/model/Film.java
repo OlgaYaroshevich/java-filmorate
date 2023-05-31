@@ -23,7 +23,7 @@ public class Film {
     private LocalDate releaseDate;
     @DurationMin(nanos = 1)
     private Duration duration;
-    Set<Long> popularFilms = new HashSet<>();
+    Set<Long> likes = new HashSet<>();
 
     public Film(Long id, String name, String description, LocalDate releaseDate, Duration duration) {
         this.id = id;
@@ -33,8 +33,8 @@ public class Film {
         this.duration = duration;
     }
 
-    public void setPopularFilms(Long userId) {
-        this.popularFilms.add(userId);
+    public void setLikes(Long userId) {
+        this.likes.add(userId);
     }
 
 }

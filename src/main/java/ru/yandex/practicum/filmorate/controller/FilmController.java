@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,23 +13,17 @@ import java.util.*;
 
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class FilmController {
 
-    FilmService filmService;
-
-    @Autowired
-    public FilmController(FilmService filmService) {
-        this.filmService = filmService;
-    }
+    private final FilmService filmService;
 
     @PostMapping(value = "/films")
-    @ResponseBody
     public Film addNewFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.addNewFilm(film);
     }
 
     @PutMapping(value = "/films")
-    @ResponseBody
     public Film updateFilm(@Valid @RequestBody Film film) throws ValidationException {
         return filmService.updateFilm(film);
     }
@@ -50,13 +45,13 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/like/{userId}")
-    public void delLike(@PathVariable("id") long idFilm,
-                        @PathVariable("userId") long idUser) throws ValidationException {
-        filmService.delLike(idFilm, idUser);
+    public void deleteLike(@PathVariable("id") long idFilm,
+                           @PathVariable("userId") long idUser) throws ValidationException {
+        filmService.deleteLike(idFilm, idUser);
     }
 
     @GetMapping("/films/popular")
-    public Collection<Film> getPopularFilms(@RequestParam(required = false) Optional<Integer> count) {
+    public List<Film> getPopularFilms(@RequestParam(required = false) Optional<Integer> count) {
         if (count.isPresent()) {
             return filmService.getPopularFilms(count.get());
         }
@@ -64,7 +59,7 @@ public class FilmController {
     }
 
     @DeleteMapping("/films/{id}/delete")
-    public void delFilm(@PathVariable("id") long id) {
-        filmService.delFilm(id);
+    public void deleteFilm(@PathVariable("id") long id) {
+        filmService.deleteFilm(id);
     }
 }
