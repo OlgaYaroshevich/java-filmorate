@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.storage.inMemoryStorage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -9,9 +9,8 @@ import java.util.*;
 
 @Repository
 @Slf4j
-public class InMemoryUserStorage implements UserStorage {
-
-    private final Map<Long, User> usersMap = new HashMap<>();
+public class InMemoryUserStorage implements InMemUserStorage {
+    private final Map<Long, User> users = new HashMap<>();
     long id = 0L;
 
     private Long countId() {
@@ -19,56 +18,69 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User addNewUser(User user) {
+    public User create(User user) {
+
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
+
         user.setId(countId());
-        usersMap.put(user.getId(), user);
-        log.debug("Добавлен пользователь {}", user);
+        users.put(user.getId(), user);
+
+        log.info("Добавлен {} клиент", user);
+
         return user;
     }
 
     @Override
-    public User updateUser(User user) {
+    public User update(User user) {
+
         if (user.getName() == null || user.getName().isBlank()) {
             user.setName(user.getLogin());
         }
-        if (usersMap.containsKey(user.getId())) {
-            usersMap.put(user.getId(), user);
-            log.debug("Обновлен пользователь {}", user);
+
+        if (users.containsKey(user.getId())) {
+            users.put(user.getId(), user);
+
+            log.info("Обновлен {} пользователь", user);
+
             return user;
+
         } else {
+
             throw new UserNotFoundException("Такого id не существует");
         }
     }
 
     @Override
     public User getUser(long id) {
-        if (usersMap.containsKey(id)) {
-            return usersMap.get(id);
+        if (users.containsKey(id)) {
+            return users.get(id);
         }
         throw new UserNotFoundException("Такого id не существует");
     }
 
     @Override
-    public List<User> getUsers() {
-        return new ArrayList<>(usersMap.values());
+    public List<User> getAllUsers() {
+
+        return new ArrayList<>(users.values());
     }
 
-    public List<User> getUsersByIds(Collection<Long> ids) {
+    public Collection<User> getUsersByIds(Collection<Long> ids) {
         List<User> result = new ArrayList<>();
         for (long userID : ids) {
-            if (!usersMap.containsKey(userID)) {
+            if (!users.containsKey(userID)) {
                 throw new UserNotFoundException("Такого id не существует");
             }
-            result.add(usersMap.get(userID));
+            result.add(users.get(userID));
         }
         return result;
     }
 
     public void deleteUser(long id) {
-        log.debug("Удаление пользователя {}", id);
-        usersMap.remove(id);
+        log.info("Удаление пользователя {}", id);
+
+        users.remove(id);
     }
+
 }

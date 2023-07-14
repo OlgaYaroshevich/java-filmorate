@@ -1,141 +1,101 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.time.Duration;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@RequiredArgsConstructor
+@SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class FilmControllerTest {
-
-    FilmController filmController;
-    FilmService filmService;
-    FilmStorage filmStorage;
-    UserStorage userStorage;
-    Film defaultFilm;
-    Film beforeLocalDateFilm;
-    Film unnamedFilm;
-    Film overDescription;
-    Film negativeDuration;
-    Film updateFilm;
+    private FilmController filmController;
+    private Film film;
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
 
     @BeforeEach
-    void beforeEach() {
-        filmStorage = new InMemoryFilmStorage();
-        userStorage = new InMemoryUserStorage();
-        filmService = new FilmService(filmStorage, userStorage);
-        filmController = new FilmController(filmService);
-
-        defaultFilm = new Film(
-                1L,
-                "Film",
-                "Default Film",
-                LocalDate.of(1989, 12, 20),
-                Duration.ofMinutes(120)
-        );
-
-        beforeLocalDateFilm = new Film(
-                2L,
-                "Before Local Date Film",
-                "before Local Date Film ",
-                LocalDate.of(1895, 12, 24),
-                Duration.ofMinutes(60)
-        );
-
-        unnamedFilm = new Film(
-                3L,
-                "",
-                "Unnamed Film",
-                LocalDate.of(1989, 12, 20),
-                Duration.ofMinutes(120)
-        );
-
-        overDescription = new Film(
-                4L,
-                "Over Description Film",
-                "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                        "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription" +
-                        "DescriptionDescriptionDescriptionDescriptionDescriptionDescriptionDescription",
-                LocalDate.of(1989, 12, 20),
-                Duration.ofMinutes(120)
-        );
-
-        negativeDuration = new Film(
-                5L,
-                "Negative Duration Film",
-                "Negative Duration Film",
-                LocalDate.of(1989, 12, 20),
-                Duration.ofMinutes(-120)
-        );
-
-        updateFilm = new Film(
-                1L,
-                "newFilm",
-                "New interesting Film",
-                LocalDate.of(1989, 10, 10),
-                Duration.ofMinutes(30)
-        );
+    protected void setUp() {
+        film = Film.builder()
+                .id(1L)
+                .name("name")
+                .description("description")
+                .duration(65)
+                .releaseDate(LocalDate.of(2002, 2, 2))
+                .likes(new ArrayList<>())
+                .genres(new ArrayList<>())
+                .mpa(MpaRating.builder()
+                        .id(1)
+                        .name("name")
+                        .build())
+                .build();
     }
 
     @Test
-    void addFilm() throws ValidationException {
-        int size = filmController.getFilms().size();
-        assertEquals(0, size, "Not null size");
-        filmController.addNewFilm(defaultFilm);
-        int size1 = filmController.getFilms().size();
-        assertEquals(1, size1, "Отличается размер мапы");
-        assertEquals(1, validator.validate(unnamedFilm).size());
-        assertEquals(1, validator.validate(overDescription).size());
-        assertEquals(1, validator.validate(negativeDuration).size());
-        assertEquals(1, validator.validate(unnamedFilm).size());
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> filmController.addNewFilm(beforeLocalDateFilm));
-        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
-                exception.getMessage());
-   }
-
-    @Test
-    void updateFilm() throws ValidationException {
-        int size = filmController.getFilms().size();
-        assertEquals(0, size, "Not null size");
-        filmController.addNewFilm(defaultFilm);
-        int size1 = filmController.getFilms().size();
-        assertEquals(1, size1, "Отличается размер мапы");
-        assertEquals(1, validator.validate(unnamedFilm).size());
-        assertEquals(1, validator.validate(overDescription).size());
-        assertEquals(1, validator.validate(negativeDuration).size());
-        assertEquals(1, validator.validate(unnamedFilm).size());
-        final ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> filmController.addNewFilm(beforeLocalDateFilm));
-        assertEquals("Дата релиза — не раньше 28 декабря 1895 года",
-                exception.getMessage());
-        filmController.updateFilm(updateFilm);
-        Film example = filmController.getFilms().get(0);
-        assertEquals(updateFilm, example, "Разные фильмы");
+    protected void nullRequestTest() {
+        film = null;
+        assertThrows(NullPointerException.class, () -> filmController.createFilm(film), "Фильм существует");
     }
 
     @Test
-    void getAllFilms() throws ValidationException {
-        int size = filmController.getFilms().size();
-        assertEquals(0, size, "Not null size");
-        filmController.addNewFilm(defaultFilm);
-        int size1 = filmController.getFilms().size();
-        assertEquals(1, size1, "Отличается размер мапы");
+    protected void idMissedTest() {
+        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film), "Фильм существует");
+    }
+
+    @Test
+    protected void blankNameTest() {
+        film.setName(null);
+        assertEquals(1, validator.validate(film).size());
+    }
+
+    @Test
+    protected void nullNameTest() {
+        film.setName("");
+        assertEquals(1, validator.validate(film).size());
+
+        film.setName(" ");
+        assertEquals(1, validator.validate(film).size());
+    }
+
+    @Test
+    protected void moreThanTwoHundredCharactersDescriptionTest() {
+        film.setDescription("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+        assertEquals(1, validator.validate(film).size());
+    }
+
+    @Test
+    protected void releaseDateIsBefore28_1895Test() {
+        film.setReleaseDate(LocalDate.parse("28-12-1894", DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        assertThrows(NullPointerException.class, () -> filmController.updateFilm(film),
+                "Фильм создан после 28.12.1895");
+    }
+
+    @Test
+    protected void negativeDurationTest() {
+        film.setDuration(-200);
+        assertEquals(1, validator.validate(film).size(), "Длительность положительная");
+    }
+
+    @Test
+    protected void negativeIdTest() {
+        film.setId(-1L);
+        assertEquals(1, validator.validate(film).size(), "Айди положительное");
     }
 }

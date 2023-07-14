@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.film;
+package ru.yandex.practicum.filmorate.storage.inMemoryStorage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -14,55 +14,69 @@ import java.util.Map;
 
 @Repository
 @Slf4j
-public class InMemoryFilmStorage implements FilmStorage {
+public class InMemoryFilmStorage implements InMemFilmStorage {
 
-    private final Map<Long, Film> filmsMap = new HashMap<>();
-    long id = 0L;
+    private final Map<Long, Film> films = new HashMap<>();
+    private long id;
 
     private Long countId() {
         return ++id;
     }
 
     @Override
-    public Film addNewFilm(Film film) throws ValidationException {
+    public Film addFilm(Film film) throws ValidationException {
+
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 25))) {
+
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
+
         film.setId(countId());
-        filmsMap.put(film.getId(), film);
-        log.debug("Фильм добавлен {}", film);
+
+        films.put(film.getId(), film);
+
+        log.info("Фильм {} добавлен", film);
+
         return film;
     }
 
     @Override
     public Film updateFilm(Film film) throws ValidationException {
         if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 25))) {
+
             throw new ValidationException("Дата релиза — не раньше 28 декабря 1895 года");
         }
-        if (filmsMap.containsKey(film.getId())) {
-            filmsMap.put(film.getId(), film);
-            log.debug("Фильм обновлен {}", film);
+
+        if (films.containsKey(film.getId())) {
+            films.put(film.getId(), film);
+
+            log.info("Фильм {} обновлен", film);
+
             return film;
-       } else {
+
+        } else {
+
             throw new FilmNotFoundException("Такого id не существует");
         }
     }
 
     @Override
     public Film getFilm(long idFilm) {
-        if (filmsMap.containsKey(idFilm)) {
-            return filmsMap.get(idFilm);
+        if (films.containsKey(idFilm)) {
+            return films.get(idFilm);
         }
+
         throw new FilmNotFoundException("Такого id не существует");
     }
 
     @Override
-    public List<Film> getFilms() {
-        return new ArrayList<>(filmsMap.values());
+    public List<Film> getAllFilms() {
+        return new ArrayList<>(films.values());
     }
 
     public void deleteFilm(long id) {
-        log.debug("Удаление фильма {}", id);
-        filmsMap.remove(id);
+        log.info("Удаление фильма {}", id);
+
+        films.remove(id);
     }
 }

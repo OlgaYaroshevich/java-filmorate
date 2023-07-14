@@ -1,68 +1,69 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collection;
 
 @RestController
 @Slf4j
-@RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
-
     private final UserService userService;
 
-    @GetMapping("/users")
-    public List<User> getUsers() {
-        return userService.getUsers();
+    private final FriendshipService friendshipService;
+
+    public UserController(UserService userService, FriendshipService friendshipService) {
+        this.userService = userService;
+        this.friendshipService = friendshipService;
     }
 
-    @PostMapping(value = "/users")
-    public User addNewUser(@Valid @RequestBody User user) throws ValidationException {
-        return userService.addNewUser(user);
+    @PostMapping()
+    public User createUser(@Valid @RequestBody User user) {
+        return userService.createUser(user);
     }
 
-    @PutMapping(value = "/users")
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
+    @PutMapping()
+    public User updateUser(@Valid @RequestBody User user) {
         return userService.updateUser(user);
     }
 
-    @GetMapping("/users/{id}")
-    public User geleteUser(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUser(id);
+    @GetMapping("/{userId}")
+    public User getUserById(@Valid @PathVariable long userId) {
+        return userService.getUserById(userId);
     }
 
-    @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") long userId,
-                          @PathVariable("friendId") long friendId) throws ValidationException {
-        userService.addFriend(userId, friendId);
-        log.debug("Друг добавлен" + friendId);
+    @GetMapping()
+    public Collection<User> getUsers() {
+        return userService.getUsers();
     }
 
-    @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") long userId,
-                             @PathVariable("friendId") long friendId) throws ValidationException {
-        userService.deleteFriend(userId, friendId);
-        log.debug("Друг удален.");
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.addFriend(userId, friendId);
     }
 
-    @GetMapping("/users/{id}/friends")
-    public List<User> getUserFriends(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUserFriends(id);
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void unfriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.unfriend(userId, friendId);
     }
 
-    @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) throws ValidationException {
-        return userService.getCommonFriends(userId, otherId);
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public Collection<User> getCommonFriends(@Valid @PathVariable long userId, @PathVariable long otherId) {
+        return friendshipService.getCommonFriends(userId, otherId);
+    }
+
+    @GetMapping("/{userId}/friends")
+    public Collection<User> getFriendsByUserId(@Valid @PathVariable long userId) {
+        return friendshipService.getFriendsByUserId(userId);
     }
 
     @DeleteMapping("/users/{id}/delete")
-    public void deleteUser(@PathVariable("id") long id) {
+    public void deleteFilm(@PathVariable("id") long id) {
         userService.deleteUser(id);
     }
 }
