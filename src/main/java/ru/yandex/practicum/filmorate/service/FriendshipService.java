@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.friendship.FriendshipStorage;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,13 +20,13 @@ public class FriendshipService {
 
     private final UserService userService;
 
-    public Collection<Long> getFriendIdsByUserId(long userId) {
+    public List<Long> getFriendIdsByUserId(long userId) {
         Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
 
         return userService.getUsersByIds(friends)
                 .stream()
                 .map(User::getId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public Friendship addFriend(long userId, long friendId) {
