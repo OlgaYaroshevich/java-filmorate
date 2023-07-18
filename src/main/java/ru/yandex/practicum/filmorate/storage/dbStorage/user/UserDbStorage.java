@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.dao.UserDao;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public Collection<User> getUsers() {
+    public List<User> getUsers() {
         return userDao.getAllUsers();
     }
 

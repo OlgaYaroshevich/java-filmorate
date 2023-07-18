@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -46,8 +47,8 @@ public class UserService {
         return user;
     }
 
-    public Collection<User> getUsers() {
-        Collection<User> users = userStorage.getUsers();
+    public List<User> getUsers() {
+        List<User> users = userStorage.getUsers();
         log.info("Получены пользователи: " + users);
         return users;
     }
