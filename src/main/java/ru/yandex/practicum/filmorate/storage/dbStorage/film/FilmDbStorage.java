@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.genre.GenreDbStorage;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

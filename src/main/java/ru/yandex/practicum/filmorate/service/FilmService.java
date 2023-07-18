@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j

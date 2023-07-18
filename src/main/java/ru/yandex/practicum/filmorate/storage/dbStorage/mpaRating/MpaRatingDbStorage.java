@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.MpaRatingDao;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
