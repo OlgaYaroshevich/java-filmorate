@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,8 +28,8 @@ public class FilmService {
         return film;
     }
 
-    public Collection<Film> getFilms() {
-        Collection<Film> films = filmStorage.getAllFilms();
+    public List<Film> getFilms() {
+        List<Film> films = filmStorage.getAllFilms();
         if (CollectionUtils.isEmpty(films)) {
             log.info("Получены фильмы: " + films);
             return films;

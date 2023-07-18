@@ -37,7 +37,7 @@ public class FilmLikeService {
                 .build());
     }
 
-    public Collection<Film> getMostPopularFilms(int count) {
+    public List<Film> getMostPopularFilms(int count) {
         Comparator<Film> comparator = Comparator.comparingInt(film -> film.getLikes().size());
         return filmStorage.getAllFilms()
                 .stream()

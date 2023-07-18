@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.dao.MpaRatingDao;
 import ru.yandex.practicum.filmorate.model.MpaRating;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +18,7 @@ public class MpaRatingDbStorage implements MpaRatingStorage {
     private final MpaRatingDao mpaRatingDao;
 
     @Override
-    public Collection<MpaRating> getMpaRatings() {
+    public List<MpaRating> getMpaRatings() {
         return mpaRatingDao.getMpaRatings();
     }
 

@@ -63,7 +63,7 @@ public class FilmDaoImpl implements FilmDao {
     }
 
     @Override
-    public Collection<Film> getAllFilms() {
+    public List<Film> getAllFilms() {
         String sqlToFilmTable = "SELECT * FROM FILMS";
         return jdbcTemplate.query(sqlToFilmTable, (rs, rowNum) -> mapToFilm(rs))
                 .stream()

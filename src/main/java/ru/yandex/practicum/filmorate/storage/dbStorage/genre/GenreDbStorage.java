@@ -6,6 +6,7 @@ import ru.yandex.practicum.filmorate.dao.GenreDao;
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -18,7 +19,7 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public Collection<Genre> getGenres() {
+    public List<Genre> getGenres() {
         return genreDao.getGenres();
     }
 
@@ -28,8 +29,8 @@ public class GenreDbStorage implements GenreStorage {
     }
 
     @Override
-    public Collection<Genre> getGenresByFilmId(long filmId) {
-        Collection<Genre> genres = genreDao.getGenresByFilmId(filmId);
+    public List<Genre> getGenresByFilmId(long filmId) {
+        List<Genre> genres = genreDao.getGenresByFilmId(filmId);
         log.info("Получены жанры: " + genres);
         return genres;
     }

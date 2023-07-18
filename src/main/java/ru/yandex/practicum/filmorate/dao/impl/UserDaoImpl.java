@@ -56,7 +56,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Collection<User> getAllUsers() {
+    public List<User> getAllUsers() {
         String sqlToUserTable = "SELECT * FROM USERS";
         return jdbcTemplate.query(sqlToUserTable, (rs, rowNum) -> mapToUser(rs))
                 .stream()
@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Collection<User> getUsersByIds(Set<Long> ids) {
+    public List<User> getUsersByIds(Set<Long> ids) {
         List<User> users = new ArrayList<>();
         if (CollectionUtils.isEmpty(ids)) {
             return users;

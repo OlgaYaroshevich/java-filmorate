@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.MpaRating;
 import ru.yandex.practicum.filmorate.storage.dbStorage.mpaRating.MpaRatingDbStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -24,8 +25,8 @@ public class MpaRatingService {
                     String.format("Рейтинг с таким id %s не существует", mpaRatingId));
     }
 
-    public Collection<MpaRating> getMpaRatings() {
-        Collection<MpaRating> ratings = mpaRatingStorage.getMpaRatings();
+    public List<MpaRating> getMpaRatings() {
+        List<MpaRating> ratings = mpaRatingStorage.getMpaRatings();
         log.info("Получены MPA рейтинги: " + ratings);
         return ratings;
     }

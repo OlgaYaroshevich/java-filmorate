@@ -8,6 +8,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dbStorage.genre.GenreStorage;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -25,8 +26,8 @@ public class GenreService {
 
     }
 
-    public Collection<Genre> getGenres() {
-        Collection<Genre> genres = genreStorage.getGenres();
+    public List<Genre> getGenres() {
+        List<Genre> genres = genreStorage.getGenres();
         log.info("Получены жанры: " + genres);
         return genres;
     }
