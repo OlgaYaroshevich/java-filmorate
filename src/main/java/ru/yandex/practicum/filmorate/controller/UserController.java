@@ -8,7 +8,6 @@ import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -57,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/friends")
-    public Collection<User> getFriendsByUserId(@Valid @PathVariable long userId) {
+    public List<User> getFriendsByUserId(@Valid @PathVariable long userId) {
         return friendshipService.getFriendsByUserId(userId);
     }
 

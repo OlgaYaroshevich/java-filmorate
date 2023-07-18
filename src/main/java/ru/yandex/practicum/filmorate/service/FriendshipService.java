@@ -53,7 +53,7 @@ public class FriendshipService {
         return userService.getUsersByIds(commonFriendsIds);
     }
 
-    public Collection<User> getFriendsByUserId(long userId) {
+    public List<User> getFriendsByUserId(long userId) {
         Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
 
         return userService.getUsersByIds(friends);
