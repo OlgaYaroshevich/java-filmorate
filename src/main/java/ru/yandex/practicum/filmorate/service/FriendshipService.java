@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storage.dbStorage.friendship.FriendshipStor
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,7 @@ public class FriendshipService {
                 .build());
     }
 
-    public Collection<User> getCommonFriends(long userId1, long userId2) {
+    public List<User> getCommonFriends(long userId1, long userId2) {
         Set<Long> userFriendsId = new HashSet<>(friendshipStorage.getFriendIdsByUserId(userId1));
         Set<Long> friendFriendsId = new HashSet<>(friendshipStorage.getFriendIdsByUserId(userId2));
         Set<Long> commonFriendsIds = new HashSet<>(getCommonElements(userFriendsId, friendFriendsId));

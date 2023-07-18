@@ -57,7 +57,7 @@ public class UserService {
         return userStorage.getUserById(userId).isPresent();
     }
 
-    public Collection<User> getUsersByIds(Collection<Long> ids) {
+    public List<User> getUsersByIds(Collection<Long> ids) {
         return userStorage.getUsersByIds(ids);
     }
 
