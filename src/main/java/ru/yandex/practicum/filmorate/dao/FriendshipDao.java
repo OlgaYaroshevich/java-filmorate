@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.dao;
 
 import ru.yandex.practicum.filmorate.model.Friendship;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface FriendshipDao {
@@ -10,7 +10,7 @@ public interface FriendshipDao {
 
     void deleteFriendship(Friendship friendship);
 
-    Collection<Long> getFriendIdsByUserId(long userId);
+    List<Long> getFriendIdsByUserId(long userId);
 
     Optional<Friendship> getFriendship(Friendship friendship);
 }

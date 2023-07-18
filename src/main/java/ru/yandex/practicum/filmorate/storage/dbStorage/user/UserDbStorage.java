@@ -35,8 +35,8 @@ public class UserDbStorage implements UserStorage {
     }
 
     @Override
-    public List<User> getUsersByIds(Collection<Long> ids) {
-        return userDao.getUsersByIds((Set<Long>) ids);
+    public List<User> getUsersByIds(List<Long> ids) {
+        return userDao.getUsersByIds((List<Long>) ids);
     }
 
     @Override

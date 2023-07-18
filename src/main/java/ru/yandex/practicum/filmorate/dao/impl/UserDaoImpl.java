@@ -74,7 +74,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> getUsersByIds(Set<Long> ids) {
+    public List<User> getUsersByIds(List<Long> ids) {
         List<User> users = new ArrayList<>();
         if (CollectionUtils.isEmpty(ids)) {
             return users;

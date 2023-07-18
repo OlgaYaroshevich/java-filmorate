@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.exception.FilmNotFoundException;
 import ru.yandex.practicum.filmorate.model.FilmLike;
 import ru.yandex.practicum.filmorate.storage.dbStorage.film.FilmStorage;
 
-import java.util.Collection;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -29,7 +29,7 @@ public class FilmLikeDbStorage implements FilmLikeStorage {
     }
 
     @Override
-    public Collection<FilmLike> getFilmLikes(long filmId) {
+    public List<FilmLike> getFilmLikes(long filmId) {
         return filmLikeDao.getFilmLikes(filmId);
     }
 

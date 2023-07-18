@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.exception.UserNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
-import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -57,7 +56,7 @@ public class UserService {
         return userStorage.getUserById(userId).isPresent();
     }
 
-    public List<User> getUsersByIds(Collection<Long> ids) {
+    public List<User> getUsersByIds(List<Long> ids) {
         return userStorage.getUsersByIds(ids);
     }
 

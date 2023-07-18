@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dbStorage.friendship.FriendshipStorage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +22,7 @@ public class FriendshipService {
     private final UserService userService;
 
     public List<Long> getFriendIdsByUserId(long userId) {
-        Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
+        List<Long> friends = friendshipStorage.getFriendIdsByUserId(userId);
 
         return userService.getUsersByIds(friends)
                 .stream()
@@ -48,12 +49,12 @@ public class FriendshipService {
     public List<User> getCommonFriends(long userId1, long userId2) {
         Set<Long> userFriendsId = new HashSet<>(friendshipStorage.getFriendIdsByUserId(userId1));
         Set<Long> friendFriendsId = new HashSet<>(friendshipStorage.getFriendIdsByUserId(userId2));
-        Set<Long> commonFriendsIds = new HashSet<>(getCommonElements(userFriendsId, friendFriendsId));
+        List<Long> commonFriendsIds = new ArrayList<>(getCommonElements(userFriendsId, friendFriendsId));
         return userService.getUsersByIds(commonFriendsIds);
     }
 
     public List<User> getFriendsByUserId(long userId) {
-        Set<Long> friends = (Set<Long>) friendshipStorage.getFriendIdsByUserId(userId);
+        List<Long> friends = friendshipStorage.getFriendIdsByUserId(userId);
 
         return userService.getUsersByIds(friends);
     }

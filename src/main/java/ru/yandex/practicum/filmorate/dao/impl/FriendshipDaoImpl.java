@@ -9,10 +9,7 @@ import ru.yandex.practicum.filmorate.model.Friendship;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.constant.FriendshipConstant.*;
@@ -44,13 +41,13 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public Set<Long> getFriendIdsByUserId(long userId) {
+    public List<Long> getFriendIdsByUserId(long userId) {
         String sqlToFriendshipTable = "SELECT * FROM FRIENDS WHERE USER_ID = ?";
         return jdbcTemplate.query(sqlToFriendshipTable, (rs, rowNum) -> mapToFriendship(rs), userId)
                 .stream()
                 .filter(Objects::nonNull)
                 .map(Friendship::getFriendId)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dao.FriendshipDao;
 import ru.yandex.practicum.filmorate.model.Friendship;
 
-import java.util.Collection;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -30,8 +30,8 @@ public class FriendshipDbStorage implements FriendshipStorage {
     }
 
     @Override
-    public Collection<Long> getFriendIdsByUserId(long userId) {
-        Collection<Long> friendsId = friendshipDao.getFriendIdsByUserId(userId);
+    public List<Long> getFriendIdsByUserId(long userId) {
+        List<Long> friendsId = friendshipDao.getFriendIdsByUserId(userId);
         log.info("Получены друзья: " + friendsId);
         return friendsId;
     }

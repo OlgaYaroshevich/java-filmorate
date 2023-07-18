@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.storage.dbStorage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -84,7 +85,7 @@ public class UserDbStorageTests {
     @Test
     protected void testGetUsersByIdsTest() {
         userStorage.create(user);
-        Optional<User> user1 = userStorage.getUsersByIds(Set.of(1L)).stream().findFirst();
+        Optional<User> user1 = userStorage.getUsersByIds(List.of(1L)).stream().findFirst();
 
         assertThat(user1)
                 .isPresent()
