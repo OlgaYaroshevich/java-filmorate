@@ -8,7 +8,7 @@ import ru.yandex.practicum.filmorate.service.FilmLikeService;
 import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @RestController
@@ -31,7 +31,7 @@ public class FilmController {
     }
 
     @GetMapping()
-    public Collection<Film> getFilms() {
+    public List<Film> getFilms() {
         return filmService.getFilms();
     }
 
@@ -51,7 +51,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<Film> getMostPopularFilms(@RequestParam(required = false) Integer count) {
+    public List<Film> getMostPopularFilms(@RequestParam(required = false) Integer count) {
         return filmLikeService.getMostPopularFilms(Objects.requireNonNullElse(count, 10));
     }
 
