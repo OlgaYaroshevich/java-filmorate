@@ -1,35 +1,38 @@
 package ru.yandex.practicum.filmorate.model;
 
-import lombok.Data;
+import lombok.*;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 public class User {
 
+    @Positive
     private Long id;
+
     @Email
     @NotBlank
     private String email;
+
     @NotBlank
     private String login;
+
     private String name;
+
     @PastOrPresent
     private LocalDate birthday;
-    Set<Long> friendsId = new HashSet<>();
 
-    public User(Long id, String email, String login, String name, LocalDate birthday) {
-        this.id = id;
-        this.email = email;
-        this.login = login;
-        this.name = name;
-        this.birthday = birthday;
-    }
+    private Set<Long> friendsId = new HashSet<>();
 
-    public void setFriendsId(Long friendsId) {
-        this.friendsId.add(friendsId);
-    }
 }

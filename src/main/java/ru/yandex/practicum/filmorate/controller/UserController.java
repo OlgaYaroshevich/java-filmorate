@@ -3,66 +3,65 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FriendshipService;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.List;
 
 @RestController
 @Slf4j
+@RequestMapping("/users")
 @RequiredArgsConstructor
-public class UserController {
 
+public class UserController {
     private final UserService userService;
 
-    @GetMapping("/users")
+    private final FriendshipService friendshipService;
+
+    @PostMapping()
+    public User createUser(@Valid @RequestBody User user) {
+        return userService.createUser(user);
+    }
+
+    @PutMapping()
+    public User updateUser(@Valid @RequestBody User user) {
+        return userService.updateUser(user);
+    }
+
+    @GetMapping("/{userId}")
+    public User getUserById(@Valid @PathVariable long userId) {
+        return userService.getUserById(userId);
+    }
+
+    @GetMapping()
     public List<User> getUsers() {
         return userService.getUsers();
     }
 
-    @PostMapping(value = "/users")
-    public User addNewUser(@Valid @RequestBody User user) throws ValidationException {
-        return userService.addNewUser(user);
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.addFriend(userId, friendId);
     }
 
-    @PutMapping(value = "/users")
-    public User updateUser(@Valid @RequestBody User user) throws ValidationException {
-        return userService.updateUser(user);
+    @DeleteMapping("/{userId}/friends/{friendId}")
+    public void unfriend(@Valid @PathVariable long userId, @PathVariable long friendId) {
+        friendshipService.unfriend(userId, friendId);
     }
 
-    @GetMapping("/users/{id}")
-    public User geleteUser(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUser(id);
+    @GetMapping("/{userId}/friends/common/{otherId}")
+    public List<User> getCommonFriends(@Valid @PathVariable long userId, @PathVariable long otherId) {
+        return friendshipService.getCommonFriends(userId, otherId);
     }
 
-    @PutMapping("/users/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable("id") long userId,
-                          @PathVariable("friendId") long friendId) throws ValidationException {
-        userService.addFriend(userId, friendId);
-        log.debug("Друг добавлен" + friendId);
-    }
-
-    @DeleteMapping("/users/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable("id") long userId,
-                             @PathVariable("friendId") long friendId) throws ValidationException {
-        userService.deleteFriend(userId, friendId);
-        log.debug("Друг удален.");
-    }
-
-    @GetMapping("/users/{id}/friends")
-    public List<User> getUserFriends(@PathVariable("id") long id) throws ValidationException {
-        return userService.getUserFriends(id);
-    }
-
-    @GetMapping("/users/{id}/friends/common/{otherId}")
-    public List<User> getCommonFriends(@PathVariable("id") long userId, @PathVariable("otherId") long otherId) throws ValidationException {
-        return userService.getCommonFriends(userId, otherId);
+    @GetMapping("/{userId}/friends")
+    public List<User> getFriendsByUserId(@Valid @PathVariable long userId) {
+        return friendshipService.getFriendsByUserId(userId);
     }
 
     @DeleteMapping("/users/{id}/delete")
-    public void deleteUser(@PathVariable("id") long id) {
+    public void deleteFilm(@PathVariable("id") long id) {
         userService.deleteUser(id);
     }
 }
